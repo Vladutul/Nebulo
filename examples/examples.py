@@ -1,4 +1,3 @@
-# filepath: c:\Users\Vladutul\Documents\GitHub\Nebulo\examples\examples.py
 # Example of using Nebulo - directly runnable
 
 from nebulo.membership import TriangularMF
