@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "nebulo"
+version = "0.1.0"
+description = "A fuzzy logic framework for modeling uncertainty and imprecision."
+authors = ["Your Name <youremail@example.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/yourusername/Nebulo"
+repository = "https://github.com/yourusername/Nebulo"
+keywords = ["fuzzy logic", "fuzzy systems", "uncertainty", "imprecision"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
