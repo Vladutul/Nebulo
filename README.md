@@ -17,7 +17,7 @@ Nebulo is a fuzzy logic framework derived from the concept of "Nebula," symboliz
 To install Nebulo, clone the repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/yourusername/Nebulo.git
+git clone https://github.com/Vladutul/Nebulo.git
 cd Nebulo
 pip install -e .
 ```

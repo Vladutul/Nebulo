@@ -2,11 +2,11 @@
 name = "nebulo"
 version = "0.1.0"
 description = "A fuzzy logic framework for modeling uncertainty and imprecision."
-authors = ["Your Name <youremail@example.com>"]
+authors = ["Your Name <ciurdeavladut@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/yourusername/Nebulo"
-repository = "https://github.com/yourusername/Nebulo"
+homepage = "https://github.com/Vladutul/Nebulo"
+repository = "https://github.com/Vladutul/Nebulo"
 keywords = ["fuzzy logic", "fuzzy systems", "uncertainty", "imprecision"]
 
 [tool.poetry.dependencies]

@@ -3,12 +3,12 @@ from setuptools import setup, find_packages
 setup(
     name="Nebulo",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Ciurdea Vladut",
+    author_email="ciurdeavladut@gmail.com",
     description="A fuzzy logic framework for modeling uncertainty and imprecision.",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/Nebulo",
+    url="https://github.com/Vladutul/Nebulo",
     packages=find_packages(where="nebulo"),
     package_dir={"": "nebulo"},
     classifiers=[
