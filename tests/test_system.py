@@ -1,4 +1,3 @@
-# filepath: c:\Users\Vladutul\Documents\GitHub\Nebulo\tests\test_system.py
 import unittest
 from nebulo.membership import TriangularMF
 from nebulo.variables import FuzzyVariable
