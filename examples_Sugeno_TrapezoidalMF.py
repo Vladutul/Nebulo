@@ -1,21 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from nebulo.membership import TriangularMF
+from nebulo.membership import TrapezoidalMF
 from nebulo.variables import FuzzyVariable
 from nebulo.rules import FuzzyRule
 from nebulo.system import FuzzySystem
 
 # --- 1. Definirea Variabilelor (Intrări Triunghiulare, Ieșire Sugeno) ---
 buget_lunar = FuzzyVariable("Buget_Lunar")
-buget_lunar.add_term("scazut", TriangularMF(0, 1000, 2000))
-buget_lunar.add_term("mediu", TriangularMF(1000, 3000, 5000))
-buget_lunar.add_term("ridicat", TriangularMF(3000, 5000, 5000))
+buget_lunar.add_term("scazut", TrapezoidalMF(0, 0, 1000, 2000))
+buget_lunar.add_term("mediu", TrapezoidalMF(1000, 2500, 3500, 5000))
+buget_lunar.add_term("ridicat", TrapezoidalMF(3000, 4500, 5000, 5000))
 
 cost_actual = FuzzyVariable("Cost_Actual")
-cost_actual.add_term("mic", TriangularMF(0, 500, 1500))
-cost_actual.add_term("moderat", TriangularMF(500, 2500, 4500))
-cost_actual.add_term("mare", TriangularMF(3500, 5000, 5000))
+cost_actual.add_term("mic", TrapezoidalMF(0, 0, 500, 1500))
+cost_actual.add_term("moderat", TrapezoidalMF(500, 2000, 3000, 4500))
+cost_actual.add_term("mare", TrapezoidalMF(3500, 4500, 5000, 5000))
 
 # Definim sistemul Sugeno
 system_sugeno = FuzzySystem(mode="sugeno")
