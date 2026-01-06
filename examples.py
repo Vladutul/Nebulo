@@ -127,16 +127,16 @@ print(f"Risc pentru Buget 1000 (Scăzut) și Cost 4500 (Mare): {buget_scazut_cos
 buget_ridicat_cost_mic = system_sugeno.evaluate({"Buget_Lunar": 4500, "Cost_Actual": 500})
 print(f"Risc pentru Buget 4500 (Ridicat) și Cost 500 (Mic): {buget_ridicat_cost_mic:.2f} (Aproape 0)")
 
-# --- 7. Tabel cu 10-20 de rulări (Conform cerinței 3 din imagine) ---
-import pandas as pd # Folosim pandas pentru un tabel aspectuos
+# --- 7. Tabel cu 20 de rulări (Conform cerinței 3 din imagine) ---
+import pandas as pd 
 
-print("\n--- Tabel 20 Rulări (x1, x2, y_sugeno) ---")
+print("\n--- Tabel 20 Rulări (Date pentru documentație) ---")
 
 date_tabel = []
 for i in range(20):
-    # Generăm valori aleatorii în intervalul 0-5000
-    x1_val = np.random.uniform(0, 5000)
-    x2_val = np.random.uniform(0, 5000)
+    # Generăm valori aleatorii pentru a testa spectrul sistemului
+    x1_val = np.random.uniform(500, 5000)
+    x2_val = np.random.uniform(500, 5000)
     
     y_val = system_sugeno.evaluate({"Buget_Lunar": x1_val, "Cost_Actual": x2_val})
     
@@ -144,46 +144,51 @@ for i in range(20):
         "Rulare": i + 1,
         "x1 (Buget)": round(x1_val, 2),
         "x2 (Cost)": round(x2_val, 2),
-        "y (Risc Sugeno)": round(y_val, 2)
+        "y (Risc)": round(y_val, 2)
     })
 
 df = pd.DataFrame(date_tabel)
 print(df.to_string(index=False))
+# df.to_csv("date_sistem_fuzzy.csv", index=False) # Opțional: salvează în Excel/CSV
 
-# --- 8. Sistem cu Buclă de Reacție (Feedback Loop) și Grafic ---
-# Ipoteză: Riscul de azi (y) crește Costul Actual (x2) de mâine (buclă de reacție)
+# --- 8. Sistem cu Buclă de Reacție (Feedback Loop) și Auto-Ajustare ---
+iteratii = 20
+buget_curent = 1200   # x1 inițial (Scăzut)
+cost_curent = 1000    # x2 inițial (Mic)
 
-iteratii = 15
-buget_fix = 2500 # x1 rămâne constant
-cost_initial = 500 # x2 inițial
-istoric_cost = [cost_initial]
+istoric_cost = []
 istoric_risc = []
+istoric_buget = []
 
-cost_curent = cost_initial
-
-# --- Varianta 1: Pornește cu un cost mai mare (Risc mediu) ---
-buget_fix = 1000   # Buget scăzut
-cost_initial = 2000 # Cost moderat
-# Acest lucru va genera un Risc (y) inițial de ~50, care va schimba costul.
-
-# --- Varianta 2: Adaugă o "perturbare" exterioară în buclă ---
 for t in range(iteratii):
-    risc = system_sugeno.evaluate({"Buget_Lunar": buget_fix, "Cost_Actual": cost_curent})
+    # 1. Evaluăm riscul la pasul curent
+    risc = system_sugeno.evaluate({"Buget_Lunar": buget_curent, "Cost_Actual": cost_curent})
+    
+    # Salvează datele
     istoric_risc.append(risc)
-    
-    # Adăugăm o creștere constantă a costului (ex: inflație) + reacția riscului
-    cost_curent = cost_curent + 200 + (risc * 5) 
-    
-    cost_curent = min(cost_curent, 5000)
     istoric_cost.append(cost_curent)
+    istoric_buget.append(buget_curent)
+    
+    # 2. Logica de feedback (Reacția sistemului)
+    # Costul crește constant cu 200 unități (inflație/consum)
+    cost_curent = min(cost_curent + 250, 5000)
+    
+    # REACȚIE: Dacă riscul detectat este mare (> 40), mărim bugetul pentru a compensa
+    if risc > 40:
+        buget_curent = min(buget_curent + 400, 5000)
+    # Dacă riscul este foarte mic, putem reduce bugetul (optimizare)
+    elif risc < 10:
+        buget_curent = max(buget_curent - 100, 500)
 
-# Graficul sistemului în buclă
-plt.figure(figsize=(10, 5))
-plt.plot(range(iteratii), istoric_risc, 'r-o', label='Nivel Risc (y)')
-plt.plot(range(iteratii), istoric_cost[:-1], 'b-s', label='Evoluție Cost (x2)')
-plt.title("Sistem cu Buclă de Reacție: Evoluția în Timp")
-plt.xlabel("Timp (Iterații)")
-plt.ylabel("Valoare")
+# --- 9. Graficul Evoluției în Timp (Sistem cu buclă de reacție) ---
+plt.figure(figsize=(12, 6))
+plt.plot(istoric_risc, 'r-o', linewidth=2, label='Ieșire: Nivel Risc (y)')
+plt.plot(istoric_cost, 'b-s', alpha=0.6, label='Intrare 1: Evoluție Cost (x2)')
+plt.plot(istoric_buget, 'g-^', alpha=0.6, label='Intrare 2: Ajustare Buget (x1)')
+
+plt.title("Analiza Sistemului în Buclă Închisă (Feedback Control)")
+plt.xlabel("Iterații (Timp)")
+plt.ylabel("Valoare / Procent Risc")
 plt.legend()
-plt.grid(True)
+plt.grid(True, linestyle=':', alpha=0.7)
 plt.show()
