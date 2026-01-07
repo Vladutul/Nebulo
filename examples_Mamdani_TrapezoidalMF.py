@@ -60,7 +60,7 @@ x2_range = np.linspace(0, 5000, 20)
 X1, X2 = np.meshgrid(x1_range, x2_range)
 Z = np.array([[system_mamdani.evaluate({"Buget_Lunar": x, "Cost_Actual": y}) for x in x1_range] for y in x2_range])
 
-# --- 3. Crearea Plotului Unificat (neschimbat) ---
+# --- 3. Crearea Plotului Unificat (Update labels) ---
 fig = plt.figure(figsize=(16, 10))
 plt.subplots_adjust(hspace=0.4, wspace=0.3)
 
@@ -68,37 +68,41 @@ ax1 = fig.add_subplot(2, 3, 1)
 x_plot = np.linspace(0, 5000, 500)
 for term, mf in buget_lunar.terms.items():
     ax1.plot(x_plot, [mf.evaluate(x) for x in x_plot], label=term.capitalize())
-ax1.set_title("MF: Buget Lunar (Trapezoidal)")
+ax1.set_title("MF: Buget Lunar (x1)")
+ax1.set_xlabel("x1 (Buget)")
 ax1.legend()
 
 ax2 = fig.add_subplot(2, 3, 2)
 for term, mf in cost_actual.terms.items():
     ax2.plot(x_plot, [mf.evaluate(x) for x in x_plot], label=term.capitalize())
-ax2.set_title("MF: Cost Actual (Trapezoidal)")
+ax2.set_title("MF: Cost Actual (x2)")
+ax2.set_xlabel("x2 (Cost)")
 ax2.legend()
 
 ax3 = fig.add_subplot(2, 3, 3)
 x_plot_risc = np.linspace(0, 100, 500)
 for term, mf in risc_var.terms.items():
     ax3.plot(x_plot_risc, [mf.evaluate(x) for x in x_plot_risc], label=term.capitalize())
-ax3.set_title("MF: Nivel Risc (Trapezoidal)")
+ax3.set_title("MF: Nivel Risc (y)")
+ax3.set_xlabel("y (Risc)")
 ax3.legend()
 
 ax4 = fig.add_subplot(2, 3, (4, 5), projection='3d')
 surf = ax4.plot_surface(X1, X2, Z, cmap='plasma', edgecolor='none')
 ax4.set_title('Suprafața de Decizie Mamdani')
-ax4.set_xlabel('Buget')
-ax4.set_ylabel('Cost')
-fig.colorbar(surf, ax=ax4, shrink=0.5, aspect=10, label='Risc')
+ax4.set_xlabel('x1 (Buget)')
+ax4.set_ylabel('x2 (Cost)')
+ax4.set_zlabel('y (Risc)')
+fig.colorbar(surf, ax=ax4, shrink=0.5, aspect=10, label='y (Risc)')
 
 ax5 = fig.add_subplot(2, 3, 6)
 ax5.plot(h_risc, 'r-o', label='Risc (y)')
-ax5.plot(np.array(h_cost)/50, 'b--', label='Cost/50')
-ax5.plot(np.array(h_buget)/50, 'g--', label='Buget/50')
+ax5.plot(np.array(h_cost)/50, 'b--', label='Cost/50 (x2)')
+ax5.plot(np.array(h_buget)/50, 'g--', label='Buget/50 (x1)')
 ax5.set_title("Evoluție Feedback")
 ax5.set_xlabel("Iterație")
 ax5.legend()
 ax5.grid(True, linestyle='--')
 
-plt.suptitle("Analiza Sistemului Fuzzy Mamdani - Control Risc Bugetar (Trapezoidal)", fontsize=16)
+plt.suptitle("Analiza Sistemului Fuzzy Mamdani (Trapezoidal)", fontsize=16)
 plt.show()
