@@ -6,16 +6,15 @@ from nebulo.variables import FuzzyVariable
 from nebulo.rules import FuzzyRule
 from nebulo.system import FuzzySystem
 
-# --- 1. Definirea Variabilelor și Sistemului (Updated to Trapezoidal) ---
+# --- 1. Definirea Variabilelor ---
 buget_lunar = FuzzyVariable("Buget_Lunar")
-# Parameters: (start, plateau_start, plateau_end, end)
-buget_lunar.add_term("scazut", TrapezoidalMF(0, 0, 1000, 2500))
+buget_lunar.add_term("scazut", TrapezoidalMF(0, 0, 1000, 2000))
 buget_lunar.add_term("mediu", TrapezoidalMF(1000, 2500, 3500, 5000))
 buget_lunar.add_term("ridicat", TrapezoidalMF(3000, 4500, 5000, 5000))
 
 cost_actual = FuzzyVariable("Cost_Actual")
-cost_actual.add_term("mic", TrapezoidalMF(0, 0, 500, 2000))
-cost_actual.add_term("moderat", TrapezoidalMF(1000, 2000, 3000, 4500))
+cost_actual.add_term("mic", TrapezoidalMF(0, 0, 500, 1500))
+cost_actual.add_term("moderat", TrapezoidalMF(500, 2000, 3000, 4500))
 cost_actual.add_term("mare", TrapezoidalMF(3500, 4500, 5000, 5000))
 
 risc_var = FuzzyVariable("Risc") 

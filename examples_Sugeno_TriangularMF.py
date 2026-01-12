@@ -6,33 +6,45 @@ from nebulo.variables import FuzzyVariable
 from nebulo.rules import FuzzyRule
 from nebulo.system import FuzzySystem
 
-# --- 1. Definirea Variabilelor (Triunghiulare) ---
+# --- 1. Definirea Variabilelor (Triunghiulare - Configurație Densă) ---
 buget_lunar = FuzzyVariable("Buget_Lunar")
-buget_lunar.add_term("scazut", TriangularMF(0, 1000, 2000))
-buget_lunar.add_term("mediu", TriangularMF(1000, 3000, 5000))
-buget_lunar.add_term("ridicat", TriangularMF(3000, 5000, 5000))
+buget_lunar.add_term("v_scazut", TriangularMF(0, 0, 1000))
+buget_lunar.add_term("scazut", TriangularMF(500, 1250, 2000))
+buget_lunar.add_term("mediu", TriangularMF(1500, 2500, 3500))
+buget_lunar.add_term("ridicat", TriangularMF(3000, 3750, 4500))
+buget_lunar.add_term("v_ridicat", TriangularMF(4000, 5000, 5000))
 
 cost_actual = FuzzyVariable("Cost_Actual")
-cost_actual.add_term("mic", TriangularMF(0, 500, 1500))
-cost_actual.add_term("moderat", TriangularMF(500, 2500, 4500))
-cost_actual.add_term("mare", TriangularMF(3500, 5000, 5000))
+cost_actual.add_term("v_mic", TriangularMF(0, 0, 1000))
+cost_actual.add_term("mic", TriangularMF(500, 1250, 2000))
+cost_actual.add_term("moderat", TriangularMF(1500, 2500, 3500))
+cost_actual.add_term("mare", TriangularMF(3000, 3750, 4500))
+cost_actual.add_term("critic", TriangularMF(4000, 5000, 5000))
 
 system_sugeno = FuzzySystem(mode="sugeno")
 system_sugeno.add_variable(buget_lunar)
 system_sugeno.add_variable(cost_actual)
 
-# Reguli cu output-uri constante (Singleton)
-rules = [
-    FuzzyRule([("Buget_Lunar", "scazut"), ("Cost_Actual", "mic")], 0),
-    FuzzyRule([("Buget_Lunar", "scazut"), ("Cost_Actual", "moderat")], 50),
-    FuzzyRule([("Buget_Lunar", "scazut"), ("Cost_Actual", "mare")], 100),
-    FuzzyRule([("Buget_Lunar", "mediu"), ("Cost_Actual", "mic")], 0),
-    FuzzyRule([("Buget_Lunar", "mediu"), ("Cost_Actual", "moderat")], 50),
-    FuzzyRule([("Buget_Lunar", "mediu"), ("Cost_Actual", "mare")], 100),
-    FuzzyRule([("Buget_Lunar", "ridicat"), ("Cost_Actual", "mic")], 0),
-    FuzzyRule([("Buget_Lunar", "ridicat"), ("Cost_Actual", "moderat")], 0),
-    FuzzyRule([("Buget_Lunar", "ridicat"), ("Cost_Actual", "mare")], 50),
+matrice_risc = [
+    [30, 60, 85, 95, 100], # Buget: v_scazut -> risc mare chiar și la cost mic
+    [10, 40, 70, 90, 100], # Buget: scazut
+    [0,  20, 50, 80, 95],  # Buget: mediu
+    [0,  10, 30, 60, 85],  # Buget: ridicat
+    [0,  0,  15, 40, 70]   # Buget: v_ridicat -> risc mic chiar și la cost mare
 ]
+
+buget_terms = ["v_scazut", "scazut", "mediu", "ridicat", "v_ridicat"]
+cost_terms = ["v_mic", "mic", "moderat", "mare", "critic"]
+
+rules = []
+for i, b_t in enumerate(buget_terms):
+    for j, c_t in enumerate(cost_terms):
+        # Extragem valoarea din matricea de mai sus
+        scor_risc = matrice_risc[i][j]
+        rules.append(FuzzyRule([(buget_lunar.name, b_t), (cost_actual.name, c_t)], scor_risc))
+
+# Curățăm regulile vechi și le adăugăm pe cele noi
+system_sugeno.rules = [] # Resetare reguli pentru a evita duplicatele
 for rule in rules:
     system_sugeno.add_rule(rule)
 

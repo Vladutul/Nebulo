@@ -6,16 +6,15 @@ from nebulo.variables import FuzzyVariable
 from nebulo.rules import FuzzyRule
 from nebulo.system import FuzzySystem
 
-# --- 1. Definirea Variabilelor și Sistemului (Identic ca denumiri, format Triangular) ---
+# --- 1. Definirea Variabilelor (Triunghiulare) ---
 buget_lunar = FuzzyVariable("Buget_Lunar")
-# Parametri TriangularMF: (start, peak, end)
-buget_lunar.add_term("scazut", TriangularMF(0, 0, 2500))
-buget_lunar.add_term("mediu", TriangularMF(1000, 2500, 5000))
+buget_lunar.add_term("scazut", TriangularMF(0, 1000, 2000))
+buget_lunar.add_term("mediu", TriangularMF(1000, 3000, 5000))
 buget_lunar.add_term("ridicat", TriangularMF(3000, 5000, 5000))
 
 cost_actual = FuzzyVariable("Cost_Actual")
-cost_actual.add_term("mic", TriangularMF(0, 0, 2000))
-cost_actual.add_term("moderat", TriangularMF(1000, 2000, 4500))
+cost_actual.add_term("mic", TriangularMF(0, 500, 1500))
+cost_actual.add_term("moderat", TriangularMF(500, 2500, 4500))
 cost_actual.add_term("mare", TriangularMF(3500, 5000, 5000))
 
 risc_var = FuzzyVariable("Risc") 

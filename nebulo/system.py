@@ -28,23 +28,19 @@ class FuzzySystem:
                     weighted_sum += w * z
                     weight_total += w
                 return weighted_sum / weight_total if weight_total != 0 else 0
-            else:  # Mamdani
+            else:
                 output_degrees = {}
                 for r in self.rules:
                     w = r.activation(fuzzified)
-                    # Presupunem că eval_output returnează (variabila, eticheta)
                     _, label = r.eval_output() 
                     output_degrees[label] = max(output_degrees.get(label, 0), w)
                 
-                # Defuzzificare prin Centrul Mediilor (Centroid approximation)
                 numerator = 0
                 denominator = 0
-                # Identificăm variabila de ieșire (Risc)
                 out_var = [v for v in self.variables.values() if v.name.startswith("Risc")][0]
                 
                 for label, activation in output_degrees.items():
                     if activation > 0:
-                        # Folosim parametrul 'b' (vârful triunghiului) ca reprezentant
                         center = out_var.terms[label].b 
                         numerator += activation * center
                         denominator += activation

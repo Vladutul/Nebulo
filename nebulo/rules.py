@@ -6,13 +6,13 @@ class FuzzyRule:
         output: numeric (Sugeno) or fuzzy term name (Mamdani)
         """
         self.conditions = conditions
-        self.output = output  # constant/function (Sugeno) or fuzzy label (Mamdani)
+        self.output = output
 
     def activation(self, fuzzified_inputs):
         degrees = [fuzzified_inputs[var][term] for var, term in self.conditions]
-        return min(degrees)  # AND logic, can be extended to OR/product
+        return min(degrees)
 
     def eval_output(self, inputs=None):
-        if callable(self.output):  # Sugeno
+        if callable(self.output):
             return self.output(inputs)
-        return self.output  # Mamdani
+        return self.output
